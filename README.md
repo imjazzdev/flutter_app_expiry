@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/flutter/website/main/src/assets/images/shared/brand/flutter/logo/flutter-lockup.png" height="40" alt="Flutter">
+<img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/icon-library.png" height="100" alt="Flutter">
 
 # flutter_app_expiry
 
