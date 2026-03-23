@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/icon-library.png" height="100" alt="Flutter">
+<img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/icon-library.png" height="300" alt="Flutter">
 
-# flutter_app_expiry
+# App Expiry
 
 **Enforce trial periods in Flutter apps — beautifully.**
 
