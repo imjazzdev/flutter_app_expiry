@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.0.3
+   - Updated README with preview video
+
 ## 0.0.2
 
 * Added `ExpiryApp.remote()` — fetch expiry date from a remote JSON endpoint
