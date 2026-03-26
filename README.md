@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/icon-library.png" height="300" alt="Flutter">
+<img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/icon-library.png" height="200" alt="Flutter">
 
 # App Expiry
 
@@ -20,7 +20,10 @@ Set an expiry date. Ship your app. Everything else is handled.
 ---
 
 ## Overview
-
+<div align="left">
+  <img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/overview.gif" 
+       width="300" alt="App Preview">
+</div>
 `flutter_app_expiry` lets you ship Flutter apps with a built-in expiration gate — ideal for trial builds, demos, or time-limited licenses. When the clock runs out, your app gracefully shows a polished lock screen instead of crashing or misbehaving.
 
 ```dart
