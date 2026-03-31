@@ -24,3 +24,5 @@ export 'src/expiry_service.dart';
 export 'src/expiry_screen.dart';
 export 'src/expiry_widget.dart';
 export 'src/remote_expiry_service.dart';
+export 'src/watermark_config.dart';
+export 'src/watermark_overlay.dart';

@@ -10,6 +10,10 @@ void main() {
       expiredMessage:
           'Your trial period has ended.\nPlease renew your license to continue using the app.',
       contactInfo: 'support@example.com',
+      watermark: const WatermarkConfig(
+        text: 'DEMO',
+        opacity: 0.12,
+      ),
       child: const MyApp(),
     ),
   );

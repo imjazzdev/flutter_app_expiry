@@ -1,6 +1,11 @@
 name: flutter_app_expiry
-description: A Flutter package to enforce app expiration (trial period) based on a specific date. After the expiry date, the app is blocked and shows a customizable expiration screen.
-version: 0.0.3
+description: >
+  A Flutter package for freelancers and agencies. Set a payment deadline —
+  the app locks itself automatically. Includes watermark overlay, custom
+  expired screens, and programmatic expiry checks. Ship demos safely.
+  Protect your work. No payment, no access.
+  
+version: 0.0.4
 homepage: https://github.com/imjazzdev/flutter_app_expiry
 repository: https://github.com/imjazzdev/flutter_app_expiry
 issue_tracker: https://github.com/imjazzdev/flutter_app_expiry/issues

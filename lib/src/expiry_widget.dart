@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'expiry_screen.dart';
 import 'expiry_service.dart';
 import 'remote_expiry_service.dart';
+import 'watermark_config.dart';
+import 'watermark_overlay.dart';
 
 /// A widget that wraps your app and enforces an expiration date.
 ///
@@ -68,6 +70,11 @@ class ExpiryApp extends StatelessWidget {
   /// Only used when [expiredWidget] is `null`.
   final String? contactInfo;
 
+  /// Optional watermark configuration.
+  ///
+  /// If provided, a watermark overlay will be displayed over the app.
+  final WatermarkConfig? watermark;
+
   /// Creates an [ExpiryApp] widget with a **local** expiry date.
   const ExpiryApp({
     super.key,
@@ -77,6 +84,7 @@ class ExpiryApp extends StatelessWidget {
     this.expiredTitle,
     this.expiredMessage,
     this.contactInfo,
+    this.watermark,
   });
 
   /// Creates an [ExpiryApp] that fetches its expiry date from a **remote
@@ -114,6 +122,7 @@ class ExpiryApp extends StatelessWidget {
     String? expiredTitle,
     String? expiredMessage,
     String? contactInfo,
+    WatermarkConfig? watermark,
   }) {
     return _RemoteExpiryApp(
       key: key,
@@ -126,6 +135,7 @@ class ExpiryApp extends StatelessWidget {
       expiredTitle: expiredTitle,
       expiredMessage: expiredMessage,
       contactInfo: contactInfo,
+      watermark: watermark,
       child: child,
     );
   }
@@ -134,17 +144,31 @@ class ExpiryApp extends StatelessWidget {
   Widget build(BuildContext context) {
     const service = ExpiryService();
 
+    Widget resultWidget;
     if (service.isExpired(expiryDate)) {
-      return expiredWidget ??
+      resultWidget = expiredWidget ??
           DefaultExpiredScreen(
             expiryDate: expiryDate,
             title: expiredTitle,
             message: expiredMessage,
             contactInfo: contactInfo,
           );
+
+      if (watermark != null && !watermark!.showOnExpiredScreen) {
+        return resultWidget;
+      }
+    } else {
+      resultWidget = child;
     }
 
-    return child;
+    if (watermark != null) {
+      return WatermarkOverlay(
+        config: watermark,
+        child: resultWidget,
+      );
+    }
+
+    return resultWidget;
   }
 }
 
@@ -162,6 +186,7 @@ class _RemoteExpiryApp extends StatefulWidget {
   final String? expiredTitle;
   final String? expiredMessage;
   final String? contactInfo;
+  final WatermarkConfig? watermark;
   final Widget child;
 
   const _RemoteExpiryApp({
@@ -176,6 +201,7 @@ class _RemoteExpiryApp extends StatefulWidget {
     this.expiredTitle,
     this.expiredMessage,
     this.contactInfo,
+    this.watermark,
   });
 
   @override
@@ -197,23 +223,38 @@ class _RemoteExpiryAppState extends State<_RemoteExpiryApp> {
   }
 
   Widget _buildExpiredOrChild(DateTime? expiryDate) {
+    Widget resultWidget;
+
     if (expiryDate == null) {
       // No remote date and no fallback → fail-open
-      return widget.child;
+      resultWidget = widget.child;
+    } else {
+      const service = ExpiryService();
+      if (service.isExpired(expiryDate)) {
+        resultWidget = widget.expiredWidget ??
+            DefaultExpiredScreen(
+              expiryDate: expiryDate,
+              title: widget.expiredTitle,
+              message: widget.expiredMessage,
+              contactInfo: widget.contactInfo,
+            );
+
+        if (widget.watermark != null && !widget.watermark!.showOnExpiredScreen) {
+          return resultWidget; // Skip watermark if app is expired and configured not to show
+        }
+      } else {
+        resultWidget = widget.child;
+      }
     }
 
-    const service = ExpiryService();
-    if (service.isExpired(expiryDate)) {
-      return widget.expiredWidget ??
-          DefaultExpiredScreen(
-            expiryDate: expiryDate,
-            title: widget.expiredTitle,
-            message: widget.expiredMessage,
-            contactInfo: widget.contactInfo,
-          );
+    if (widget.watermark != null) {
+      return WatermarkOverlay(
+        config: widget.watermark,
+        child: resultWidget,
+      );
     }
 
-    return widget.child;
+    return resultWidget;
   }
 
   @override

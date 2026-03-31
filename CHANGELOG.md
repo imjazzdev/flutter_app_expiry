@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.4
+
+* Added `WatermarkConfig` to display a customizable watermark overlay (e.g., "DEMO") over the app UI.
+* Easily customizable with opacity, angle, color, and tiled repeating mode.
+
 ## 0.0.3
    - Updated README with preview video
 
