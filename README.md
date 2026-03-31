@@ -57,7 +57,7 @@ That's it. One widget wraps everything.
 ```yaml
 # pubspec.yaml
 dependencies:
-  flutter_app_expiry: ^0.0.1
+  flutter_app_expiry: ^latest-version
 ```
 
 ```bash

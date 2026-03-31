@@ -1,15 +1,12 @@
 # Changelog
 
-## 1.2.0
+## 1.2.1
 
-* Added `WatermarkConfig` to display a customizable watermark overlay (e.g., "DEMO") over the app UI.
-* Easily customizable with opacity, angle, color, and tiled repeating mode.
-
-
-## 0.0.4
-
-* Added `WatermarkConfig` to display a customizable watermark overlay (e.g., "DEMO") over the app UI.
-* Easily customizable with opacity, angle, color, and tiled repeating mode.
+*   **✨ New Feature: Image Watermarking** — You can now use asset image paths for the watermark overlay by passing `imagePath` and `imageSize` to `WatermarkConfig`.
+*   **📂 Tiled or Centered Rendering** — Automatically tiles the image watermark across the screen by default, or shows it once centered with `repeat: false`.
+*   **🛠 Layout Stability Fix** — Explicitly set `alignment: Alignment.topLeft` for `Stack` widgets in `WatermarkOverlay` to prevent the "No Directionality widget found" error when the package is used at the root level.
+*   **📖 Improved Documentation** — Reorganized the README with clearer examples for both text and image mode watermarks.
+*   **🎨 Watermark Customization** — Easily customizable with opacity, angle, color, and tiled repeating mode.
 
 ## 0.0.3
    - Updated README with preview video

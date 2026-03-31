@@ -26,12 +26,13 @@ class WatermarkOverlay extends StatelessWidget {
 
     final bool hasImage =
         config!.imagePath != null && config!.imagePath!.isNotEmpty;
-    final bool hasText =
-        config!.text != null && config!.text!.isNotEmpty;
+    final bool hasText = config!.text != null && config!.text!.isNotEmpty;
 
     if (!hasImage && !hasText) return child;
 
     return Stack(
+      clipBehavior: Clip.none,
+      textDirection: TextDirection.ltr,
       children: [
         child,
         IgnorePointer(
@@ -68,7 +69,6 @@ class _ImageWatermark extends StatelessWidget {
         final double height = constraints.maxHeight;
 
         if (!config.repeat) {
-          // Single centered image
           return Transform.rotate(
             angle: config.angle,
             child: Center(
@@ -82,16 +82,20 @@ class _ImageWatermark extends StatelessWidget {
           );
         }
 
-        // Tiled image grid — enough tiles to cover the full rotated diagonal
-        final double diagonal =
-            math.sqrt(width * width + height * height);
-        final double spacing = config.tileSpacing;
-        final double start = -diagonal;
-        final double end = diagonal;
+        final double diagonal = math.sqrt(width * width + height * height);
+
+        // 🔥 FIX UTAMA
+        final double stepX = config.imageSize.width + config.tileSpacing;
+        final double stepY = config.imageSize.height + config.tileSpacing;
+
+        final double coverage = diagonal * 2;
+        final double start = -coverage;
+        final double end = coverage;
 
         final List<Widget> tiles = [];
-        for (double dx = start; dx < end; dx += spacing) {
-          for (double dy = start; dy < end; dy += spacing) {
+
+        for (double dx = start; dx < end; dx += stepX) {
+          for (double dy = start; dy < end; dy += stepY) {
             tiles.add(
               Positioned(
                 left: width / 2 + dx - config.imageSize.width / 2,
@@ -109,7 +113,11 @@ class _ImageWatermark extends StatelessWidget {
 
         return Transform.rotate(
           angle: config.angle,
-          child: Stack(children: tiles),
+          child: Stack(
+            clipBehavior: Clip.none,
+            textDirection: TextDirection.ltr,
+            children: tiles,
+          ),
         );
       },
     );
