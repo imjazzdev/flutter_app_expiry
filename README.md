@@ -123,24 +123,61 @@ DefaultExpiredScreen(
 
 ## 🖼 Watermark Overlay
 
-Need to brand a demo build or remind unpaid clients they're on a trial? The watermark overlay floats your logo on top of the running app — persistent, unobtrusive, and impossible to miss.
+Need to brand a demo build or remind unpaid clients they're on a trial? The watermark overlay floats above your entire app UI — persistent, unobtrusive, and impossible to miss.
 
 Common use cases:
 - **Demo apps** — make it clear the build isn't production-ready
 - **Unpaid clients** — reinforce that a license is still pending
 - **Internal builds** — distinguish staging from release
 
+### Text watermark (default)
+
 ```dart
 ExpiryApp(
   expiryDate: DateTime(2026, 12, 31),
   watermark: WatermarkConfig(
-    image: AssetImage('assets/logo.png'),
+    text: 'DEMO',
+    color: Colors.red,
+    opacity: 0.15,
+    angle: -0.4,
+    repeat: true,
+    tileSpacing: 140.0,
   ),
   child: const MyApp(),
 )
 ```
 
-The watermark renders above your app's UI at all times and is removed automatically once a valid license is in place.
+### Image watermark
+
+Pass any asset image path via `imagePath`. Make sure the asset is declared in your `pubspec.yaml`.
+
+```dart
+ExpiryApp(
+  expiryDate: DateTime(2026, 12, 31),
+  watermark: WatermarkConfig(
+    imagePath: 'assets/logo.png',  // your asset path
+    imageSize: Size(80, 80),       // tile size (optional, default 80×80)
+    opacity: 0.15,
+    angle: -0.4,
+    repeat: true,
+    tileSpacing: 140.0,
+  ),
+  child: const MyApp(),
+)
+```
+
+> **Note:** When `imagePath` is set, `text`, `textStyle`, and `color` are ignored — image mode takes priority.
+
+Single centered image (no tiling):
+
+```dart
+WatermarkConfig(
+  imagePath: 'assets/logo.png',
+  repeat: false,  // renders once, centered
+)
+```
+
+The watermark renders above your app's UI at all times and ignores all touch events so it never blocks user interaction.
 
 ---
 
@@ -176,15 +213,24 @@ Great for showing in-app banners like *"Your trial expires in 7 days"*.
 | `expiredTitle` | `String?` | — | Title on the default screen |
 | `expiredMessage` | `String?` | — | Message on the default screen |
 | `contactInfo` | `String?` | — | Contact text on the default screen |
-| `watermark` | `WatermarkConfig?` | — | Logo overlay for demo/trial branding |
+| `watermark` | `WatermarkConfig?` | — | Watermark overlay for demo/trial branding |
 
 > `expiredWidget` takes precedence — if provided, `expiredTitle`, `expiredMessage`, and `contactInfo` are ignored.
 
 ### `WatermarkConfig`
 
-| Parameter | Type | Required | Description |
-|-----------|------|:---:|---|
-| `image` | `ImageProvider` | ✅ | The image to display as a watermark |
+| Parameter | Type | Default | Description |
+|-----------|------|---------|---|
+| `text` | `String?` | `'DEMO'` | Text label shown as watermark. Ignored when `imagePath` is set. |
+| `textStyle` | `TextStyle?` | `null` | Custom style for text. Falls back to `color` + 24sp bold. |
+| `imagePath` | `String?` | `null` | Asset path to an image watermark (e.g. `'assets/logo.png'`). Takes priority over `text`. |
+| `imageSize` | `Size` | `Size(80, 80)` | Width and height of each image tile. |
+| `opacity` | `double` | `0.15` | Overall opacity of the watermark (0.0–1.0). |
+| `angle` | `double` | `-0.4` | Rotation in radians. Negative = diagonal tilt. |
+| `repeat` | `bool` | `true` | Tile the watermark across the whole screen. |
+| `tileSpacing` | `double` | `140.0` | Spacing between tiles when `repeat` is `true`. |
+| `color` | `Color` | `Colors.grey` | Text color when no `textStyle` is provided. Text mode only. |
+| `showOnExpiredScreen` | `bool` | `false` | Whether to show the watermark on the expired screen too. |
 
 ### `ExpiryService`
 

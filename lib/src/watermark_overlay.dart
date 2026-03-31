@@ -22,9 +22,14 @@ class WatermarkOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (config == null || (config!.text == null && config!.text!.isEmpty)) {
-      return child;
-    }
+    if (config == null) return child;
+
+    final bool hasImage =
+        config!.imagePath != null && config!.imagePath!.isNotEmpty;
+    final bool hasText =
+        config!.text != null && config!.text!.isNotEmpty;
+
+    if (!hasImage && !hasText) return child;
 
     return Stack(
       children: [
@@ -33,9 +38,11 @@ class WatermarkOverlay extends StatelessWidget {
           child: Opacity(
             opacity: config!.opacity,
             child: SizedBox.expand(
-              child: CustomPaint(
-                painter: _WatermarkPainter(config: config!),
-              ),
+              child: hasImage
+                  ? _ImageWatermark(config: config!)
+                  : CustomPaint(
+                      painter: _WatermarkPainter(config: config!),
+                    ),
             ),
           ),
         ),
@@ -43,6 +50,75 @@ class WatermarkOverlay extends StatelessWidget {
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Image-based watermark
+// ---------------------------------------------------------------------------
+
+class _ImageWatermark extends StatelessWidget {
+  final WatermarkConfig config;
+
+  const _ImageWatermark({required this.config});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double width = constraints.maxWidth;
+        final double height = constraints.maxHeight;
+
+        if (!config.repeat) {
+          // Single centered image
+          return Transform.rotate(
+            angle: config.angle,
+            child: Center(
+              child: Image.asset(
+                config.imagePath!,
+                width: config.imageSize.width,
+                height: config.imageSize.height,
+                fit: BoxFit.contain,
+              ),
+            ),
+          );
+        }
+
+        // Tiled image grid — enough tiles to cover the full rotated diagonal
+        final double diagonal =
+            math.sqrt(width * width + height * height);
+        final double spacing = config.tileSpacing;
+        final double start = -diagonal;
+        final double end = diagonal;
+
+        final List<Widget> tiles = [];
+        for (double dx = start; dx < end; dx += spacing) {
+          for (double dy = start; dy < end; dy += spacing) {
+            tiles.add(
+              Positioned(
+                left: width / 2 + dx - config.imageSize.width / 2,
+                top: height / 2 + dy - config.imageSize.height / 2,
+                child: Image.asset(
+                  config.imagePath!,
+                  width: config.imageSize.width,
+                  height: config.imageSize.height,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            );
+          }
+        }
+
+        return Transform.rotate(
+          angle: config.angle,
+          child: Stack(children: tiles),
+        );
+      },
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Text-based watermark (CustomPainter)
+// ---------------------------------------------------------------------------
 
 class _WatermarkPainter extends CustomPainter {
   final WatermarkConfig config;
@@ -61,10 +137,7 @@ class _WatermarkPainter extends CustomPainter {
           decoration: TextDecoration.none,
         );
 
-    final textSpan = TextSpan(
-      text: config.text,
-      style: textStyle,
-    );
+    final textSpan = TextSpan(text: config.text, style: textStyle);
 
     final textPainter = TextPainter(
       text: textSpan,
@@ -72,22 +145,23 @@ class _WatermarkPainter extends CustomPainter {
     );
     textPainter.layout();
 
-    final double diagonal = math.sqrt(size.width * size.width + size.height * size.height);
+    final double diagonal =
+        math.sqrt(size.width * size.width + size.height * size.height);
 
     canvas.translate(size.width / 2, size.height / 2);
     canvas.rotate(config.angle);
 
     if (config.repeat) {
       final double spacing = config.tileSpacing;
-
-      // Start offscreen to cover the corners correctly when rotated
       final double start = -diagonal;
       final double end = diagonal;
 
       for (double dx = start; dx < end; dx += spacing) {
         for (double dy = start; dy < end; dy += spacing) {
           textPainter.paint(
-              canvas, Offset(dx - textPainter.width / 2, dy - textPainter.height / 2));
+            canvas,
+            Offset(dx - textPainter.width / 2, dy - textPainter.height / 2),
+          );
         }
       }
     } else {
