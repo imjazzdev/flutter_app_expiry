@@ -5,7 +5,7 @@ description: >
   expired screens, and programmatic expiry checks. Ship demos safely.
   Protect your work. No payment, no access.
 
-version: 1.2.1
+version: 1.2.2
 homepage: https://github.com/imjazzdev/flutter_app_expiry
 repository: https://github.com/imjazzdev/flutter_app_expiry
 issue_tracker: https://github.com/imjazzdev/flutter_app_expiry/issues

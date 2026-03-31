@@ -20,10 +20,22 @@ Set an expiry date. Ship your app. Everything else is handled.
 ---
 
 ## Overview
-<div align="left">
-  <img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/overview.gif" 
-       width="250" alt="App Preview">
-</div>
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/overview-1.gif" 
+           width="250" alt="App Expiry Preview">
+      <br/>
+      <sub><b>🔒 Expiry Deadlline App</b></sub>
+    </td>
+    <td align="center">
+      <img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/overview-2.gif" 
+           width="250" alt="Watermark Overlay Preview">
+      <br/>
+      <sub><b>🖼 Branding Watermark</b></sub>
+    </td>
+  </tr>
+</table>
 Delivered the app. Client ghosts you. Sound familiar? `flutter_app_expiry` lets you ship a fully functional build that automatically locks itself on your terms — so you stay in control until the invoice is settled. Ideal for freelancers, agencies, and indie developers who need a reliable payment deadline gate without writing it from scratch.
 
 ```dart

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.2
+* Updated README.md with preview video
+
 ## 1.2.1
 
 *   **✨ New Feature: Image Watermarking** — You can now use asset image paths for the watermark overlay by passing `imagePath` and `imageSize` to `WatermarkConfig`.
