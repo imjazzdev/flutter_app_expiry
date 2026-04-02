@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.3
+* Update desc and topic
+
 ## 1.2.2
 * Updated README.md with preview video
 
