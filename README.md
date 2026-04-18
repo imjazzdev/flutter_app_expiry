@@ -2,7 +2,6 @@
 
 <img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/welcome.png" height="200" alt="Flutter">
 
-# App Expiry
 
 **Ship with confidence. Lock the app until you get paid.**
 
@@ -23,13 +22,13 @@ Set an expiry date. Ship your app. Everything else is handled.
 <table>
   <tr>
     <td align="center">
-      <img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/overview-1.gif" 
+      <img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/main/example/assets/overview-1.gif" 
            width="250" alt="App Expiry Preview">
       <br/>
       <sub><b>🔒 Expiry Deadlline App</b></sub>
     </td>
     <td align="center">
-      <img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/refs/heads/main/example/assets/overview-2.gif" 
+      <img src="https://raw.githubusercontent.com/imjazzdev/flutter_app_expiry/main/example/assets/overview-2.gif" 
            width="250" alt="Watermark Overlay Preview">
       <br/>
       <sub><b>🖼 Branding Watermark</b></sub>
