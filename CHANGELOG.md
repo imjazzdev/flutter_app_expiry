@@ -1,4 +1,8 @@
 # Changelog
+
+## 1.2.6
+* Update logo
+
 ## 1.2.5
 * Update screenshoot
 
