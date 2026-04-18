@@ -13,7 +13,7 @@
 
 Set an expiry date. Ship your app. Everything else is handled.
 
-[Getting Started](#-getting-started) · [API Reference](#-api-reference) · [Customization](#-customization) · [pub.dev →](https://pub.dev/packages/flutter_app_expiry)
+[Getting Started](#-getting-started) · [Remote Expiry](#-remote-expiry-date) · [API Reference](#-api-reference) · [Customization](#-customization) · [pub.dev →](https://pub.dev/packages/flutter_app_expiry)
 
 </div>
 
@@ -57,6 +57,7 @@ That's it. One widget wraps everything.
 | 🎨 **Beautiful default UI** | Animated lock screen with gradient, shown out of the box |
 | 🛠 **Fully replaceable** | Swap in your own expired widget with a single parameter |
 | 📅 **ExpiryService utility** | Query remaining days or duration programmatically |
+| 🌐 **Remote expiry date** | Fetch the expiry date from your server — update without republishing |
 | 🖼 **Unpaid branding** | Stamp every screen with your watermark until the client pays |
 | 🪶 **Zero extra dependencies** | Pure Flutter — nothing added to your dependency tree |
 
@@ -213,6 +214,69 @@ Great for showing in-app banners like *"Your trial expires in 7 days"*.
 
 ---
 
+## 🌐 Remote Expiry Date
+
+Need to change the expiry date **without republishing** your app? Serve it from a JSON endpoint and `RemoteExpiryService` handles the rest — with caching, retries, and full web support built in.
+
+### Quickest way — one line
+
+```dart
+final date = await RemoteExpiryService.fetch('https://example.com/expiry.json');
+```
+
+### Inside `ExpiryApp` (recommended)
+
+```dart
+void main() {
+  runApp(
+    ExpiryApp.remote(
+      remoteUrl: 'https://example.com/expiry.json',
+      fallbackExpiryDate: DateTime(2026, 12, 31), // used if server is unreachable
+      child: const MyApp(),
+    ),
+  );
+}
+```
+
+While the date is being fetched a loading spinner is shown. If the fetch fails, `fallbackExpiryDate` is used automatically.
+
+### Full configuration
+
+```dart
+final service = RemoteExpiryService(
+  url: 'https://example.com/expiry.json',
+  jsonKey: 'expiryDate',          // JSON key to read (default: 'expiryDate')
+  cacheDuration: Duration(hours: 1), // cache in memory — avoids hitting server every launch
+  maxRetries: 2,                  // retry up to 2 extra times on failure
+  retryDelay: Duration(seconds: 1),
+  headers: {'Authorization': 'Bearer my-token'}, // optional auth headers
+  onError: (e) => debugPrint('Fetch error: $e'),  // optional error callback
+);
+
+final date = await service.fetchExpiryDate();
+```
+
+### Expected JSON format
+
+Your endpoint must return a JSON object with an ISO 8601 date string:
+
+```json
+{ "expiryDate": "2026-12-31T00:00:00Z" }
+```
+
+The key name is configurable via `jsonKey`. Dates are always normalised to **UTC** for consistency across all timezones.
+
+### Cache management
+
+```dart
+service.clearCache();               // force refresh for this URL only
+RemoteExpiryService.clearAllCache(); // wipe cache for all URLs
+```
+
+> **Tip:** You can host the JSON for free on GitHub Gist, Pastebin, or any static file host — no backend needed.
+
+---
+
 ## 📚 API Reference
 
 ### `ExpiryApp`
@@ -252,6 +316,26 @@ Great for showing in-app banners like *"Your trial expires in 7 days"*.
 | `remainingDays(DateTime)` | `int` | Full calendar days remaining |
 | `remainingDuration(DateTime)` | `Duration` | Precise duration until expiry |
 
+### `RemoteExpiryService`
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|---|
+| `url` | `String` | **required** | HTTPS endpoint returning the expiry JSON |
+| `jsonKey` | `String` | `'expiryDate'` | JSON key holding the ISO 8601 date string |
+| `timeout` | `Duration` | `10s` | Max wait time per request |
+| `cacheDuration` | `Duration` | `1h` | How long to cache the result in memory |
+| `maxRetries` | `int` | `2` | Extra retry attempts on failure |
+| `retryDelay` | `Duration` | `1s` | Delay between retries |
+| `headers` | `Map<String,String>?` | `null` | Optional HTTP headers (e.g. auth tokens) |
+| `onError` | `Function(Object)?` | `null` | Called after all retries fail |
+
+| Method / Static | Returns | Description |
+|---------|---------|---|
+| `RemoteExpiryService.fetch(url)` | `Future<DateTime?>` | One-shot fetch — no instance needed |
+| `fetchExpiryDate()` | `Future<DateTime?>` | Fetch with caching and retries |
+| `clearCache()` | `void` | Clear cache for this URL |
+| `RemoteExpiryService.clearAllCache()` | `void` | Clear cache for all URLs |
+
 ---
 
 ## 📂 Project Structure
@@ -259,12 +343,17 @@ Great for showing in-app banners like *"Your trial expires in 7 days"*.
 ```
 flutter_app_expiry/
 ├── lib/
-│   ├── flutter_app_expiry.dart       # Public barrel export
+│   ├── flutter_app_expiry.dart           # Public barrel export
 │   └── src/
-│       ├── expiry_service.dart       # Core expiry logic
-│       ├── expiry_screen.dart        # Default animated UI
-│       ├── expiry_widget.dart        # ExpiryApp wrapper widget
-│       └── watermark_overlay.dart    # Watermark overlay widget
+│       ├── expiry_service.dart           # Core expiry logic
+│       ├── expiry_screen.dart            # Default animated UI
+│       ├── expiry_widget.dart            # ExpiryApp wrapper widget
+│       ├── remote_expiry_service.dart    # RemoteExpiryService (fetch from server)
+│       ├── remote_expiry_fetcher_io.dart # HTTP impl for Android/iOS/Desktop
+│       ├── remote_expiry_fetcher_web.dart# HTTP impl for Flutter Web
+│       ├── remote_expiry_fetcher_stub.dart # Fallback stub
+│       ├── watermark_config.dart         # WatermarkConfig model
+│       └── watermark_overlay.dart        # Watermark overlay widget
 ├── example/
 │   └── lib/main.dart
 ├── pubspec.yaml

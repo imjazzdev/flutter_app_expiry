@@ -3,7 +3,7 @@ description: >
   Enforce trial periods in Flutter apps. Set a deadline,
   auto-lock on expiry, and protect your work. Zero dependencies.
 
-version: 1.2.3
+version: 1.2.4
 homepage: https://github.com/imjazzdev/flutter_app_expiry
 repository: https://github.com/imjazzdev/flutter_app_expiry
 issue_tracker: https://github.com/imjazzdev/flutter_app_expiry/issues
