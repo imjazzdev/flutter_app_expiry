@@ -5,7 +5,7 @@
   "packages": [
     {
       "name": "flutter_app_expiry",
-      "version": "0.0.2",
+      "version": "1.2.5",
       "dependencies": [
         "flutter"
       ],
@@ -159,7 +159,7 @@
     },
     {
       "name": "async",
-      "version": "2.13.0",
+      "version": "2.13.1",
       "dependencies": [
         "collection",
         "meta"

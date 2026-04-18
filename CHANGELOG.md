@@ -1,4 +1,9 @@
 # Changelog
+## 1.2.5
+* Update screenshoot
+
+## 1.2.4
+* Update logo
 
 ## 1.2.3
 * Update desc and topic
