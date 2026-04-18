@@ -14,6 +14,14 @@ topics:
   - license
   - watermark
 
+
+screenshots:
+  - description: "Logo of Flutter App Expiry"
+    path: assets/icon-library.png
+
+
+
+# ===========================================================
 environment:
   sdk: ">=3.0.0 <4.0.0"
   flutter: ">=3.10.0"
